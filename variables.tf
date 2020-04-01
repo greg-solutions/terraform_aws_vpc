@@ -12,10 +12,12 @@ variable "aws_availability_zones" {
   type = "list"
   default = [
     "us-east-1a",
-    "us-east-1b"]
+    "us-east-1b"
+  ]
 }
 
 variable "region" {
+  default = "us-east-1"
 }
 
 variable "env_name" {
