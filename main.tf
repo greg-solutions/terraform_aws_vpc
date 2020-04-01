@@ -46,7 +46,7 @@ resource "aws_nat_gateway" "nat_gateway" {
   count = length(var.aws_availability_zones)
   subnet_id = aws_subnet.public_subnet.*.id[count.index]
   depends_on = [
-    "aws_internet_gateway.internet_gateway"]
+    aws_internet_gateway.internet_gateway]
   tags = {
     Name = lower(format("nat-gw-zone-%s", var.aws_availability_zones[count.index]))
     Env = lower(var.env_name)
