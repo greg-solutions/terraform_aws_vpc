@@ -20,3 +20,7 @@ variable "region" {
 variable "env_name" {
   default = "base"
 }
+
+variable "have_private_subnet" {
+  default = true
+}

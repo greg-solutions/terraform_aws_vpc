@@ -43,7 +43,7 @@ resource "aws_internet_gateway" "internet_gateway" {
 */
 resource "aws_nat_gateway" "nat_gateway" {
   allocation_id = aws_eip.vpc_elastic_public_ip.*.id[count.index]
-  count = length(var.aws_availability_zones)
+  count = var.have_private_subnet==true? length(var.aws_availability_zones):0
   subnet_id = aws_subnet.public_subnet.*.id[count.index]
   depends_on = [
     aws_internet_gateway.internet_gateway]
@@ -78,7 +78,7 @@ resource "aws_subnet" "public_subnet" {
 */
 resource "aws_subnet" "private_subnet" {
   vpc_id = aws_vpc.private_vpc.id
-  count = length(var.aws_availability_zones)
+  count = var.have_private_subnet==true?  length(var.aws_availability_zones):0
   cidr_block = cidrsubnet(aws_vpc.private_vpc.cidr_block, 8, count.index + length(var.aws_availability_zones))
   availability_zone = var.aws_availability_zones[count.index]
   map_public_ip_on_launch = false
