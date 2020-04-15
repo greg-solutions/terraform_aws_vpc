@@ -104,7 +104,7 @@ resource "aws_eip" "vpc_elastic_public_ip" {
 }
 
 resource "aws_route_table" "private_route_table" {
-  count = var.have_private_subnet==true?  length(aws_subnet.private_subnet.*.id):0
+  count = var.have_private_subnet==true? length(aws_subnet.private_subnet.*.id):0
   vpc_id = aws_vpc.private_vpc.id
 
   route {
