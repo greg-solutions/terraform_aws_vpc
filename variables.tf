@@ -24,3 +24,9 @@ variable "env_name" {
 variable "have_private_subnet" {
   default = true
 }
+variable "public_subnet_tags" {
+  default = {}
+}
+variable "private_subnet_tags" {
+  default = {}
+}

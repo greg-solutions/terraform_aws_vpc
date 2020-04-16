@@ -5,8 +5,12 @@
   and configure route tables, network gateways, security settings, etc.
 */
 
+
 locals {
   vpc_name = lower(var.app_name)
+  tags = {
+    Env = lower(var.env_name)
+  }
 }
 
 resource "aws_vpc" "private_vpc" {
@@ -65,10 +69,12 @@ resource "aws_subnet" "public_subnet" {
   availability_zone = var.aws_availability_zones[count.index]
   map_public_ip_on_launch = true
 
-  tags = {
+  tags = merge(
+  local.tags,
+  {
     Name = format("public-subnet-zone-%s", var.aws_availability_zones[count.index])
-    Env = lower(var.env_name)
-  }
+  },
+  var.public_subnet_tags)
 }
 
 /*
