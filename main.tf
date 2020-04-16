@@ -74,7 +74,8 @@ resource "aws_subnet" "public_subnet" {
   {
     Name = format("public-subnet-zone-%s", var.aws_availability_zones[count.index])
   },
-  var.public_subnet_tags)
+  var.public_subnet_tags
+  )
 }
 
 /*
@@ -89,10 +90,13 @@ resource "aws_subnet" "private_subnet" {
   availability_zone = var.aws_availability_zones[count.index]
   map_public_ip_on_launch = false
 
-  tags = {
-    Name = lower(format("private-subnet-zone-%s", var.aws_availability_zones[count.index]))
-    Env = lower(var.env_name)
-  }
+  tags = merge(
+  local.tags,
+  {
+    Name = format("private-subnet-zone-%s", var.aws_availability_zones[count.index])
+  },
+  var.public_subnet_tags
+  )
 }
 
 /*
