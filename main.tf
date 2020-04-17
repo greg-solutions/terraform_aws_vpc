@@ -46,8 +46,8 @@ resource "aws_internet_gateway" "internet_gateway" {
   NAT gateway is paid feathure and cost some money (see: https://aws.amazon.com/vpc/pricing/)
 */
 resource "aws_nat_gateway" "nat_gateway" {
-  allocation_id = aws_eip.vpc_elastic_public_ip.*.id[count.index]
   count = var.have_private_subnet==true? length(var.aws_availability_zones):0
+  allocation_id = aws_eip.vpc_elastic_public_ip.*.id[count.index]
   subnet_id = aws_subnet.public_subnet.*.id[count.index]
   depends_on = [
     aws_internet_gateway.internet_gateway]
@@ -106,7 +106,7 @@ resource "aws_subnet" "private_subnet" {
 */
 resource "aws_eip" "vpc_elastic_public_ip" {
   vpc = true
-  count = length(var.aws_availability_zones)
+  count = var.have_private_subnet==true? length(var.aws_availability_zones):0
   tags = {
     Name = lower(format("eip-zone-%s", var.aws_availability_zones[count.index]))
     Env = lower(var.env_name)
