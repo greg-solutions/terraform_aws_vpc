@@ -24,7 +24,8 @@ variable "env_name" {
 variable "have_private_subnet" {
   default = true
 }
-variable "public_subnet_tags" {
+variable "tags" {
+  type = map(string)
   default = {}
 }
 variable "private_subnet_tags" {

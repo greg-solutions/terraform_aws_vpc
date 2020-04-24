@@ -33,10 +33,13 @@ resource "aws_vpc" "private_vpc" {
 */
 resource "aws_internet_gateway" "internet_gateway" {
   vpc_id = aws_vpc.private_vpc.id
-  tags = {
+  tags = merge(
+  local.tags,
+  {
     Name = lower(format("%s-internet-gateway", local.vpc_name))
-    Env = lower(var.env_name)
-  }
+  },
+  var.tags
+  )
 }
 
 /*
@@ -74,7 +77,7 @@ resource "aws_subnet" "public_subnet" {
   {
     Name = format("public-subnet-zone-%s", var.aws_availability_zones[count.index])
   },
-  var.public_subnet_tags
+  var.tags
   )
 }
 
@@ -95,7 +98,7 @@ resource "aws_subnet" "private_subnet" {
   {
     Name = format("private-subnet-zone-%s", var.aws_availability_zones[count.index])
   },
-  var.public_subnet_tags
+  var.tags
   )
 }
 
@@ -122,10 +125,13 @@ resource "aws_route_table" "private_route_table" {
     nat_gateway_id = aws_nat_gateway.nat_gateway.*.id[count.index]
   }
 
-  tags = {
+  tags = merge(
+  local.tags,
+  {
     Name = lower(format("private-rt-zone-%s-%d", var.app_name, count.index))
-    Env = lower(var.env_name)
-  }
+  },
+  var.tags
+  )
 }
 
 resource "aws_route_table" "public_route_table" {
@@ -136,10 +142,13 @@ resource "aws_route_table" "public_route_table" {
     gateway_id = aws_internet_gateway.internet_gateway.id
   }
 
-  tags = {
+  tags = merge(
+  local.tags,
+  {
     Name = lower(format("public-rt-zone-%s", var.app_name))
-    Env = lower(var.env_name)
-  }
+  },
+  var.tags
+  )
 }
 
 resource "aws_route_table_association" "public_route_table_association" {
